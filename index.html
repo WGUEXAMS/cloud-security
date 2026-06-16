@@ -198,22 +198,24 @@ const questions=[
   {q:"Which section of a contract includes the customer's right to audit the vendor to verify whether the vendor is fulfilling its contractual obligations?",opts:["Assurance","Indemnification","Termination","Litigation"],ans:0,rat:"The Assurance section specifies the customer's rights to verify that the vendor is meeting contractual and compliance obligations, often including the right to audit or require compliance reports like SOC 2."},
 ];
 
+const originalQuestions=[...questions];
+let activeQuestions=[...questions];
 let mode=null,current=0;
-let testState=questions.map(()=>null);
-let practiceState=questions.map(()=>({picked:null,showAnswer:false}));
-let flagged=questions.map(()=>false);
+let testState=activeQuestions.map(()=>null);
+let practiceState=activeQuestions.map(()=>({picked:null,showAnswer:false}));
+let flagged=activeQuestions.map(()=>false);
 let testGraded=false;
 
-function resetState(){current=0;testState=questions.map(()=>null);practiceState=questions.map(()=>({picked:null,showAnswer:false}));flagged=questions.map(()=>false);testGraded=false;}
+function resetState(){current=0;testState=activeQuestions.map(()=>null);practiceState=activeQuestions.map(()=>({picked:null,showAnswer:false}));flagged=activeQuestions.map(()=>false);testGraded=false;}
 
 function numGrid(){
-  const btns=questions.map((_,i)=>{
+  const btns=activeQuestions.map((_,i)=>{
     let cls='num-btn';
     const isFlagged=flagged[i];
     if(i===current)cls+=' active';
     else if(isFlagged)cls+=' flagged';
     else if(mode==='test'){
-      if(testGraded){cls+=testState[i]===questions[i].ans?' done-correct':testState[i]!==null?' done-wrong':'';}
+      if(testGraded){cls+=testState[i]===activeQuestions[i].ans?' done-correct':testState[i]!==null?' done-wrong':'';}
       else if(testState[i]!==null)cls+=' num-selected';
     } else {
       const ps=practiceState[i];
@@ -232,23 +234,12 @@ function numGrid(){
 function jumpTo(i){current=i;render();}
 
 
-function shuffleQuestions() {
-  for (let i = questions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [questions[i], questions[j]] = [questions[j], questions[i]];
-    [testState[i], testState[j]] = [testState[j], testState[i]];
-    [practiceState[i], practiceState[j]] = [practiceState[j], practiceState[i]];
-    [flagged[i], flagged[j]] = [flagged[j], flagged[i]];
-  }
-  current = 0;
-  render();
-}
 
 
 function renderModeSelect(){
   document.getElementById('root').innerHTML=`
-    <div class="mode-screen">\n      <button class="restart-btn" onclick="shuffleQuestions()">🔀 Mix Questions</button><br><br>
-      <p>${questions.length} questions &nbsp;&middot;&nbsp; Choose your mode</p>
+    <div class="mode-screen">\n      
+      <p>${activeQuestions.length} questions &nbsp;&middot;&nbsp; Choose your mode</p>
       <div class="mode-cards">
         <div class="mode-card" onclick="startMode('test')">
           <div class="icon">&#128221;</div><div class="title">Test</div>
@@ -261,15 +252,15 @@ function renderModeSelect(){
       </div>
     </div>`;
 }
-function startMode(m){mode=m;resetState();render();}
+function startMode(m){mode=m;if(m==="test"){const copy=[...originalQuestions];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}activeQuestions=copy;}else{activeQuestions=[...originalQuestions];}resetState();render();}
 
 function render(){
   const root=document.getElementById('root');
-  if(mode==='test'&&testGraded&&current>=questions.length){renderTestResults();return;}
-  if(mode==='practice'&&current>=questions.length){renderPracticeEnd();return;}
-  const q=questions[current];
+  if(mode==='test'&&testGraded&&current>=activeQuestions.length){renderTestResults();return;}
+  if(mode==='practice'&&current>=activeQuestions.length){renderPracticeEnd();return;}
+  const q=activeQuestions[current];
   const pct=Math.round((current/questions.length)*100);
-  const isLast=current===questions.length-1;
+  const isLast=current===activeQuestions.length-1;
   const isFlagged=flagged[current];
   let optHtml='',fbText='',fbCls='feedback',practiceControls='',rationaleHtml='',navRight='',hint='';
 
@@ -341,13 +332,13 @@ function backToMenu(){mode=null;renderModeSelect();}
 
 function renderTestResults(){
   const root=document.getElementById('root');
-  const score=testState.filter((s,i)=>s===questions[i].ans).length;
-  const wrong=testState.filter((s,i)=>s!==null&&s!==questions[i].ans).length;
+  const score=testState.filter((s,i)=>s===activeQuestions[i].ans).length;
+  const wrong=testState.filter((s,i)=>s!==null&&s!==activeQuestions[i].ans).length;
   const unanswered=testState.filter(s=>s===null).length;
   const stillFlagged=flagged.filter(Boolean).length;
   const pct=Math.round((score/questions.length)*100);
   const msg=pct>=90?'&#127881; Excellent work!':pct>=70?'&#128077; Good job &mdash; keep reviewing!':'&#128218; Keep studying &mdash; you\'ve got this!';
-  const missedItems=questions.map((q,i)=>testState[i]!==q.ans?{q:q.q,correct:String.fromCharCode(65+q.ans)+') '+q.opts[q.ans]}:null).filter(Boolean);
+  const missedItems=activeQuestions.map((q,i)=>testState[i]!==q.ans?{q:q.q,correct:String.fromCharCode(65+q.ans)+') '+q.opts[q.ans]}:null).filter(Boolean);
   const missedHtml=missedItems.length?'<div class="missed-list">'+missedItems.map(m=>`<div class="missed-item"><div class="missed-q">${m.q}</div><div class="missed-a">&#10003; ${m.correct}</div></div>`).join('')+'</div>':'';
   root.innerHTML=`<div class="score-card"><div class="score-num">${score}/${questions.length}</div><div class="score-label">${pct}% correct</div>
     <div class="summary-row">
@@ -367,7 +358,7 @@ function renderTestResults(){
 }
 function reviewTest(){current=0;render();}
 function renderPracticeEnd(){
-  document.getElementById('root').innerHTML=`<div class="practice-end"><div class="big">&#128218;</div><h2>Practice complete!</h2><p>You reviewed all ${questions.length} questions.</p><div class="end-btns"><button class="restart-btn" onclick="startMode('practice')">Practice again</button><button class="restart-btn" onclick="startMode('test')">Take the test</button><button class="restart-btn" onclick="backToMenu()">Menu</button></div></div>`;
+  document.getElementById('root').innerHTML=`<div class="practice-end"><div class="big">&#128218;</div><h2>Practice complete!</h2><p>You reviewed all ${activeQuestions.length} questions.</p><div class="end-btns"><button class="restart-btn" onclick="startMode('practice')">Practice again</button><button class="restart-btn" onclick="startMode('test')">Take the test</button><button class="restart-btn" onclick="backToMenu()">Menu</button></div></div>`;
 }
 
 renderModeSelect();
