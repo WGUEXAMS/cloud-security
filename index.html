@@ -12,6 +12,11 @@
   [data-theme="dark"] .q-counter{color:#aaaaaa;}
   [data-theme="dark"] body{color:#ffffff;}
   [data-theme="dark"] .card{color:#ffffff;}
+
+  [data-theme="dark"] .mode-card .title{color:#ffffff;}
+  [data-theme="dark"] .mode-card .desc{color:#d0d0d0;}
+  [data-theme="dark"] .mode-card{background:#111;border-color:#444;}
+
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0;margin:0;transition:background .2s,color .2s;}
   .card{background:var(--card);padding:2rem;max-width:100%;width:100%;min-height:100vh;transition:background .2s;}
@@ -226,9 +231,23 @@ function numGrid(){
 }
 function jumpTo(i){current=i;render();}
 
+
+function shuffleQuestions() {
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+    [testState[i], testState[j]] = [testState[j], testState[i]];
+    [practiceState[i], practiceState[j]] = [practiceState[j], practiceState[i]];
+    [flagged[i], flagged[j]] = [flagged[j], flagged[i]];
+  }
+  current = 0;
+  render();
+}
+
+
 function renderModeSelect(){
   document.getElementById('root').innerHTML=`
-    <div class="mode-screen">
+    <div class="mode-screen">\n      <button class="restart-btn" onclick="shuffleQuestions()">🔀 Mix Questions</button><br><br>
       <p>${questions.length} questions &nbsp;&middot;&nbsp; Choose your mode</p>
       <div class="mode-cards">
         <div class="mode-card" onclick="startMode('test')">
