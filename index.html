@@ -102,6 +102,19 @@
   .practice-end .big{font-size:36px;margin-bottom:.5rem;}
   .practice-end h2{font-size:18px;font-weight:500;margin-bottom:.5rem;}
   .practice-end p{font-size:14px;color:var(--text2);margin-bottom:1.5rem;}
+
+  .history-screen{padding:.5rem 0 1.5rem;}
+  .history-screen h2{font-size:16px;font-weight:500;margin-bottom:1rem;}
+  .history-empty{font-size:14px;color:var(--text2);padding:2rem 0;text-align:center;}
+  .history-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem;}
+  .history-table th{text-align:left;padding:8px 10px;border-bottom:.5px solid var(--border2);color:var(--text2);font-weight:500;}
+  .history-table td{padding:9px 10px;border-bottom:.5px solid var(--border);color:var(--text);}
+  .history-table tr:last-child td{border-bottom:none;}
+  .hist-pass{color:var(--correct-border);font-weight:600;}
+  .hist-fail{color:var(--wrong-border);font-weight:600;}
+  .hist-mid{color:var(--flag);font-weight:600;}
+  .clear-hist-btn{background:transparent;border:.5px solid var(--wrong-border);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;color:var(--wrong-text);font-family:inherit;}
+  .clear-hist-btn:hover{background:var(--wrong-bg);}
 </style>
 </head>
 <body>
@@ -236,6 +249,34 @@ function jumpTo(i){current=i;render();}
 
 
 
+function renderHistory(){
+  const root=document.getElementById('root');
+  const history=JSON.parse(localStorage.getItem('quizHistory')||'[]');
+  const rows=history.length?history.map((e,i)=>`
+    <tr>
+      <td>${history.length-i}</td>
+      <td>${e.date} ${e.time}</td>
+      <td class="${e.pct>=90?'hist-pass':e.pct>=70?'hist-mid':'hist-fail'}">${e.score}/${e.total} &nbsp;(${e.pct}%)</td>
+      <td>${e.wrong}</td>
+      <td>${e.unanswered}</td>
+    </tr>`).join(''):'';
+  const emptyMsg=history.length?'':`<div class="history-empty">No results yet &mdash; take a test first!</div>`;
+  const tableHtml=history.length?`<table class="history-table">
+    <thead><tr><th>#</th><th>Date &amp; Time</th><th>Score</th><th>Wrong</th><th>Skipped</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <button class="clear-hist-btn" onclick="clearHistory()">&#128465; Clear history</button>`:'';
+  root.innerHTML=`<div class="history-screen">
+    <h2>&#128200; Score History</h2>
+    ${emptyMsg}${tableHtml}
+    <div style="margin-top:1.25rem;">
+      <button class="action-btn" onclick="renderModeSelect()">&#8592; Back to menu</button>
+    </div>
+  </div>`;
+}
+function clearHistory(){
+  if(confirm('Clear all saved results?')){localStorage.removeItem('quizHistory');renderHistory();}
+}
 function renderModeSelect(){
   document.getElementById('root').innerHTML=`
     <div class="mode-screen">\n      
@@ -249,6 +290,9 @@ function renderModeSelect(){
           <div class="icon">&#128218;</div><div class="title">Practice</div>
           <div class="desc">Show/hide answers, flag questions to revisit.No score.</div>
         </div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button class="action-btn" onclick="renderHistory()" style="font-size:13px;padding:8px 16px;color:var(--text2);">&#128200; View score history</button>
       </div>
     </div>`;
 }
@@ -322,6 +366,16 @@ function render(){
 }
 
 function testPick(i){if(testGraded)return;testState[current]=i;render();}
+
+function saveResult(score, total, wrong, unanswered){
+  const pct=Math.round((score/total)*100);
+  const now=new Date();
+  const entry={date:now.toLocaleDateString(),time:now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),score,total,wrong,unanswered,pct};
+  const history=JSON.parse(localStorage.getItem('quizHistory')||'[]');
+  history.unshift(entry);
+  if(history.length>20) history.pop(); // keep last 20
+  localStorage.setItem('quizHistory', JSON.stringify(history));
+}
 function submitTest(){testGraded=true;current=0;flagged=activeQuestions.map(()=>false);render();}
 function practicePick(i){practiceState[current].picked=i;render();}
 function toggleShowAnswer(){practiceState[current].showAnswer=!practiceState[current].showAnswer;render();}
@@ -336,7 +390,8 @@ function renderTestResults(){
   const wrong=testState.filter((s,i)=>s!==null&&s!==activeQuestions[i].ans).length;
   const unanswered=testState.filter(s=>s===null).length;
   const stillFlagged=flagged.filter(Boolean).length;
-  const pct=Math.round((score/questions.length)*100);
+  const pct=Math.round((score/activeQuestions.length)*100);
+  saveResult(score,activeQuestions.length,wrong,unanswered);
   const msg=pct>=90?'&#127881; Excellent work!':pct>=70?'&#128077; Good job &mdash; keep reviewing!':'&#128218; Keep studying &mdash; you\'ve got this!';
   const missedItems=activeQuestions.map((q,i)=>testState[i]!==q.ans?{q:q.q,correct:String.fromCharCode(65+q.ans)+') '+q.opts[q.ans]}:null).filter(Boolean);
   const missedHtml=missedItems.length?'<div class="missed-list">'+missedItems.map(m=>`<div class="missed-item"><div class="missed-q">${m.q}</div><div class="missed-a">&#10003; ${m.correct}</div></div>`).join('')+'</div>':'';
