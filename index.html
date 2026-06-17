@@ -215,7 +215,7 @@ function numGrid(){
     if(i===current)cls+=' active';
     else if(isFlagged)cls+=' flagged';
     else if(mode==='test'){
-      if(testGraded){cls+=testState[i]===activeQuestions[i].ans?' done-correct':testState[i]!==null?' done-wrong':'';}
+      if(testGraded){cls+=testState[i]===activeQuestions[i].ans?' done-correct':' done-wrong';}
       else if(testState[i]!==null)cls+=' num-selected';
     } else {
       const ps=practiceState[i];
@@ -322,7 +322,7 @@ function render(){
 }
 
 function testPick(i){if(testGraded)return;testState[current]=i;render();}
-function submitTest(){testGraded=true;current=0;render();}
+function submitTest(){testGraded=true;current=0;flagged=activeQuestions.map(()=>false);render();}
 function practicePick(i){practiceState[current].picked=i;render();}
 function toggleShowAnswer(){practiceState[current].showAnswer=!practiceState[current].showAnswer;render();}
 function toggleFlag(){flagged[current]=!flagged[current];render();}
