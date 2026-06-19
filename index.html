@@ -26,6 +26,9 @@
   .dark-toggle:hover{background:var(--hover);color:var(--text);}
   .mode-screen{text-align:center;padding:1rem 0 1.5rem;}
   .mode-screen>p{font-size:14px;color:var(--text2);margin-bottom:2rem;}
+  .warning-banner{background:#FEF3C7;border:.5px solid #F59E0B;border-radius:10px;padding:12px 16px;margin-bottom:1.5rem;font-size:13px;color:#92400E;display:flex;align-items:flex-start;gap:10px;text-align:left;line-height:1.5;}
+  [data-theme="dark"] .warning-banner{background:#1a1000;border-color:#D97706;color:#FCD34D;}
+  .warning-icon{font-size:20px;flex-shrink:0;}
   .mode-cards{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
   .mode-card{border:.5px solid var(--border);border-radius:12px;padding:1.5rem 1.25rem;width:200px;cursor:pointer;text-align:left;background:var(--card);transition:background .15s,border-color .15s;}
   .mode-card:hover{background:var(--hover);border-color:var(--border2);}
@@ -284,6 +287,7 @@ function clearHistory(){
 function renderModeSelect(){
   document.getElementById('root').innerHTML=`
     <div class="mode-screen">\n      
+      <div class="warning-banner"><span class="warning-icon">&#9888;&#65039;</span><div><strong>Heads up!</strong> As of January 19, 2026, the questions on this exam have changed. This quiz may not reflect the latest questions you may get on the exam.</div></div>
       <p>${activeQuestions.length} questions &nbsp;&middot;&nbsp; Choose your mode</p>
       <div class="mode-cards">
         <div class="mode-card" onclick="startMode('test')">
