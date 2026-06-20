@@ -287,7 +287,6 @@ function clearHistory(){
 function renderModeSelect(){
   document.getElementById('root').innerHTML=`
     <div class="mode-screen">\n      
-      <div class="warning-banner"><span class="warning-icon">&#9888;&#65039;</span><div><strong>Heads up!</strong> As of January 19, 2026, the questions on this exam have changed. This quiz may not reflect the latest questions you may get on the exam.</div></div>
       <p>${activeQuestions.length} questions &nbsp;&middot;&nbsp; Choose your mode</p>
       <div class="mode-cards">
         <div class="mode-card" onclick="startMode('test')">
