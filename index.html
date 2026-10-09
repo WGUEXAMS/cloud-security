@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0042)https://wguexams.github.io/cloud-security/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Managing Cloud Security Quiz</title>
 <style>
@@ -122,15 +122,37 @@
   .coffee-btn{position:fixed;bottom:24px;right:24px;background:#FFDD00;border:none;border-radius:99px;padding:14px 24px;font-size:16px;font-weight:700;color:#000;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:9999;transition:transform .15s,box-shadow .15s;}
   .coffee-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.22);}
   .coffee-btn span{font-size:22px;}
+  .exams-btn{position:fixed;bottom:24px;left:24px;background:var(--accent);border:none;border-radius:99px;padding:14px 24px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:9999;transition:transform .15s,box-shadow .15s;}
+  .exams-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.22);}
+  .exams-btn span{font-size:20px;}
 </style>
-</head>
+<style id="dark-reader-style" type="text/css">@media screen {
+
+}</style></head>
 <body>
 <div class="card" id="app" data-theme="light">
   <div class="header">
     <h1>Managing Cloud Security Quiz</h1>
-    <button class="dark-toggle" id="theme-btn" onclick="toggleDark()">&#127769; Dark</button>
+    <button class="dark-toggle" id="theme-btn" onclick="toggleDark()">🌙 Dark</button>
   </div>
-  <div id="root"></div>
+  <div id="root">
+    <div class="mode-screen">
+      
+      <p>80 questions &nbsp;·&nbsp; Choose your mode</p>
+      <div class="mode-cards">
+        <div class="mode-card" onclick="startMode('test')">
+          <div class="icon">📝</div><div class="title">Test</div>
+          <div class="desc">Select answers freely, flag questions to revisit, then submit for grading.</div>
+        </div>
+        <div class="mode-card" onclick="startMode('practice')">
+          <div class="icon">📚</div><div class="title">Practice</div>
+          <div class="desc">Show/hide answers, flag questions to revisit.No score.</div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button class="action-btn" onclick="renderHistory()" style="font-size:13px;padding:8px 16px;color:var(--text2);">📈 View score history</button>
+      </div>
+    </div></div>
 </div>
 <script>
 function toggleDark(){const a=document.getElementById('app');const d=a.getAttribute('data-theme')==='dark';a.setAttribute('data-theme',d?'light':'dark');document.getElementById('theme-btn').textContent=d?'\u{1F319} Dark':'\u2600\uFE0F Light';}
@@ -426,8 +448,10 @@ function renderPracticeEnd(){
 renderModeSelect();
 </script>
 
+  <a class="exams-btn" href="https://wguexams.github.io/"><span>📚</span> Other exams</a>
+
   <a class="coffee-btn" href="https://buymeacoffee.com/playmaker777" target="_blank" rel="noopener">
-    <span>&#9749;</span> Buy me a coffee
+    <span>☕</span> Buy me a coffee
   </a>
-</body>
-</html>
+
+</body></html>
