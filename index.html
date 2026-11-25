@@ -419,6 +419,8 @@ body.practice-mode #examTimerText{font-weight:600;}
 .ls-cta .ls-ghost{width:100%;max-width:640px;justify-content:center;font-size:18px;padding:18px 28px;border-radius:14px;gap:10px;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08);}
 .ls-cta .ls-ghost svg{width:20px;height:20px;}
 .ls-cta .ls-ghost:hover{background:rgba(255,255,255,.14);border-color:rgba(70,177,239,.7);}
+/* bottom-bar ad: hide when the bar is too narrow to fit 728px beside the buttons */
+@media(max-width:1400px){#barAd{display:none;}}
 </style>
 <style id="dark-reader-style" type="text/css">@media screen {
 
@@ -594,6 +596,9 @@ body.practice-mode #examTimerText{font-weight:600;}
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"></path></svg>
     Menu
   </button>
+  <div id="barAd" style="flex:1;display:flex;justify-content:center;align-items:center;margin:0 24px;min-width:0;">
+    <ins class="adsbygoogle" style="display:inline-block;width:728px;height:50px" data-ad-client="ca-pub-8607281786536421" data-ad-slot="8916192676"></ins>
+  </div>
   <button class="prevnext-btn" id="prevBtn" type="button">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"></path></svg>
     Previous
@@ -1766,6 +1771,7 @@ function startMode(mode) {
   $("examChrome").style.display = "block";
   $("examScroll").style.display = "block";
   $("examBottom").style.display = "flex";
+  if (!window._barAdLoaded && getComputedStyle($("barAd")).display !== "none") { window._barAdLoaded = true; (adsbygoogle = window.adsbygoogle || []).push({}); }
   stopTimer();
   if (mode === "exam") { timerSeconds = 90 * 60; startTimer(); }
   else { $("examTimerText").textContent = "Practice mode"; }
