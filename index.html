@@ -9,6 +9,8 @@
   gtag('js', new Date());
   gtag('config', 'G-Q98PCV1Q15');
 </script>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8607281786536421" crossorigin="anonymous"></script>
 
 <title>WGUEXAMS — Cloud Security Practice Exam</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -499,6 +501,10 @@ body.practice-mode #examTimerText{font-weight:600;}
 
   <a class="ls-coffee" id="coffeeBtn" href="https://buymeacoffee.com/playmaker777" target="_blank" rel="noopener"><span style="font-size:17px">☕</span> Buy me a coffee</a>
 
+  <div class="wgu-ad" style="max-width:820px;margin:28px auto 0;text-align:center;">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8607281786536421" data-ad-slot="1613880829" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
   <p class="ls-foot">Independent study resource. Not affiliated with or endorsed by Western Governors University.</p>
 </div>
 
@@ -560,6 +566,10 @@ body.practice-mode #examTimerText{font-weight:600;}
     <p class="rs-sub" id="rsSub"></p>
     <div class="rs-grid" id="rsDomains"></div>
     <p class="rs-note">Exam mode doesn't reveal answers. To see explanations, study the same questions in Practice mode.</p>
+    <div class="wgu-ad" style="max-width:820px;margin:28px auto 0;text-align:center;">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8607281786536421" data-ad-slot="1613880829" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
     <div class="rs-btns">
       <button class="ls-begin" id="retakeBtn" type="button">Retake exam (new order)</button>
       <button class="ls-ghost" id="toPracticeBtn" type="button">Practice mode</button>
@@ -1759,7 +1769,7 @@ function startMode(mode) {
   stopTimer();
   if (mode === "exam") { timerSeconds = 90 * 60; startTimer(); }
   else { $("examTimerText").textContent = "Practice mode"; }
-  if (window.gtag) gtag("event", "start_" + mode, { page: "D332" });
+  if (window.gtag) gtag("event", "start_" + mode, { page: "D320" });
   goTo(0);
 }
 
@@ -1820,7 +1830,7 @@ function finishExam(timeUp) {
   $("landingScreen").style.display = "none";
   $("resultsScreen").style.display = "block";
   window.scrollTo(0, 0);
-  if (window.gtag) gtag("event", "finish_exam", { page: "D332", score: pct, passed: pass, time_up: !!timeUp });
+  if (window.gtag) gtag("event", "finish_exam", { page: "D320", score: pct, passed: pass, time_up: !!timeUp });
 }
 
 $("practiceBtn").addEventListener("click", () => startMode("practice"));
@@ -1851,9 +1861,9 @@ $("qreadOverlay").addEventListener("click", (e) => { if (e.target === $("qreadOv
 
 
 (function(){ var m = questions.filter(q => q.type === "mcq").length; var el=document.getElementById("mcqCount"); if(el) el.textContent = m; })();
-$("waBtn").addEventListener("click", () => { if (window.gtag) gtag("event", "click_whatsapp", { page: "D332" }); });
-$("pmMail").addEventListener("click", () => { if (window.gtag) gtag("event", "click_premium_email", { page: "D332" }); });
-$("coffeeBtn").addEventListener("click", () => { if (window.gtag) gtag("event", "click_coffee", { page: "D332" }); });
+$("waBtn").addEventListener("click", () => { if (window.gtag) gtag("event", "click_whatsapp", { page: "D320" }); });
+$("pmMail").addEventListener("click", () => { if (window.gtag) gtag("event", "click_premium_email", { page: "D320" }); });
+$("coffeeBtn").addEventListener("click", () => { if (window.gtag) gtag("event", "click_coffee", { page: "D320" }); });
 </script>
 
 
